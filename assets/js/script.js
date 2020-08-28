@@ -14,9 +14,16 @@ var planDay = [
     { time: "12 pm", event: ""},
     { time: "1 pm", event: ""},
     { time: "2 pm", event: ""},
-    { time: "3 pm", event: ""},
-    { time: "4 pm", event: ""},
+    { time: "3 pm", event: ""}
 ];
+
+// check local storage for saved day planner
+var checkPrevious = JSON.parse(localStorage.getItem("dayPlanner"));
+
+// if there is saved info set in place
+if (checkPrevious !== null) {
+    planDay = checkPrevious;
+}
 
 // show current day in header
 $("#currentDay").text(today);
@@ -60,3 +67,27 @@ function colorMe(time) {
         return "present";
     }
 }
+
+// user entries
+// when save button is clicked
+$(".saveBtn").on("click", function(event) {
+    // ID for target time block
+    var blockID = parseInt(
+        $(this)
+            .closest(".time-block")
+            .attr("id")
+    );
+
+    var userEntry = $.trim(
+        $(this)
+            .parent()
+            .siblings("textarea")
+            .val()
+    );
+
+    // save user event in day planner array at target index
+    planDay[blockID].event = userEntry;
+
+    // save updated planner to local storage
+    localStorage.setItem("dayPlanner", JSON.stringify(planDay));
+});
